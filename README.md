@@ -1,4 +1,4 @@
-# BetterAuth Tech Assignment
+
 
 Quick run
 
