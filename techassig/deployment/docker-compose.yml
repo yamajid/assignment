@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../deployment/Dockerfile.frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - shared-db:/app/data
+    env_file:
+      - ../.env
+    environment:
+      - DATABASE_PATH=/app/data/dev.db
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../deployment/Dockerfile.backend
+    container_name: backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+      - shared-db:/app/data
+    env_file:
+      - ../.env
+    environment:
+      - DATABASE_PATH=/app/data/dev.db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  shared-db:
